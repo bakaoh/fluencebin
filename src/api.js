@@ -1,4 +1,4 @@
-// require('script!./../node_modules/ipfs-api/dist/ipfsapi.js')
+import * as fluence from "fluence";
 
 const parseJSONorNonJSON = (to_parse) => {
   var to_return = null
@@ -13,42 +13,35 @@ const parseJSONorNonJSON = (to_parse) => {
   return to_return
 }
 
+const getResultString = (result) => {
+  return result.result().then((r) => r.asString())
+}
+
 class API {
-  constructor (hostname) {
-    this.hostname = hostname
-    // this.ipfs = window.ipfsAPI(this.hostname, '5001')
+  constructor () {
+    // let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
+    // let ethUrl = "http://rinkeby.fluence.one:8545/"
+    // let appId = "344";
+    // fluence.connect(contractAddress, appId, ethUrl).then((s) => {
+    //   this.session = s;
+    // });
+    this.session = fluence.directConnect("localhost", 30000, 1);
   }
+
   add (data) {
+    let result = this.session.request("POST: " + data);
     return new Promise((resolve) => {
-      // this.ipfs.add(new Buffer(data), (err, res) => {
-      //   if (err) throw err
-      //   // TODO works for both 0.3 and 0.4, refactor once moved to 0.4
-      //   if (res[0] === undefined) {
-      //     resolve(res.Hash) // 0.4
-      //   } else {
-      //     resolve(res[0].Hash) // 0.3
-      //   }
-      // })
-      resolve();
+      getResultString(result).then(function (str) {
+        resolve(str);
+      });
     })
   }
   cat (hash) {
+    let result = this.session.request("GET: " + hash);
     return new Promise((resolve) => {
-      // this.ipfs.cat(hash, (err, res) => {
-      //   if (err) throw err
-      //   if (res.readable) {
-      //     var chunks = []
-      //     res.on('data', function (chunk) {
-      //       chunks.push(chunk)
-      //     })
-      //     res.on('end', function () {
-      //       resolve(parseJSONorNonJSON(chunks.join('')))
-      //     })
-      //   } else {
-      //     resolve(parseJSONorNonJSON(res.toString()))
-      //   }
-      // })
-      resolve();
+      getResultString(result).then(function (str) {
+        resolve(parseJSONorNonJSON(str));
+      });
     })
   }
 }

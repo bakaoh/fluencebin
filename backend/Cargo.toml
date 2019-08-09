@@ -1,0 +1,20 @@
+[package]
+name = "fluencebin"
+version = "0.1.0"
+publish = false
+edition = "2018"
+
+[lib]
+name = "fluencebin"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[profile.release]
+debug = false
+lto = true
+opt-level = "z"
+panic = "abort"
+
+[dependencies]
+log = "0.4"
+fluence = { version = "0.1.5", features = ["wasm_logger"] }

@@ -5,15 +5,11 @@ import './header.css'
 
 export default class Header extends Component {
   render () {
-    let saveClasses = 'save-button'
     let saveText = 'Save'
-
     if (this.props.saved) {
-      saveClasses = saveClasses + '-disabled'
       saveText = 'Saved'
     }
     if (this.props.saving) {
-      saveClasses = saveClasses + '-saving'
       saveText = 'Saving'
     }
     return <div className='header'>
@@ -25,14 +21,14 @@ export default class Header extends Component {
       <div className='header-item'>
         <SelectLanguage mode={this.props.mode} onChange={this.props.onChangeMode}/>
       </div>
-      <div className='header-item' onClick={this.props.onNew}>
-        <a href='#'>New</a>
+      <div className='header-item'>
+        <button onClick={this.props.onNew}>New</button>
       </div>
-      <div className={'header-item ' + saveClasses} onClick={(evt) => {
-        evt.preventDefault()
-        this.props.onSave()
-      }}>
-        <a href='#'>{saveText}</a>
+      <div className='header-item'>
+        <button disabled={this.props.saved || this.props.saving} onClick={(evt) => {
+          evt.preventDefault()
+          this.props.onSave()
+        }}>{saveText}</button>
       </div>
       <div className='header-item header-item-right'>
         <a rel="noopener noreferrer" href='https://github.com/bakaoh/fluencebin' target='_blank'>Source Code</a>

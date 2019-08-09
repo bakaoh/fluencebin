@@ -37,11 +37,7 @@ var modes = new ModesService()
 
 class App extends Component {
   componentDidMount () {
-    if (this.props.local) {
-      this.api = new APIService('localhost')
-    } else {
-      this.api = new APIService(window.location.hostname)
-    }
+    this.api = new APIService()
     const loadPaste = (hash) => {
       this.props.dispatch(actions.Reset())
       this.api.cat(hash).then((obj) => {
@@ -69,13 +65,6 @@ class App extends Component {
       if (hashFromURL() !== this.props.hash) {
         initLoad()
       }
-    }
-  }
-  componentDidUpdate (prevProps) {
-    if (this.props.local) {
-      this.api = new APIService('localhost')
-    } else {
-      this.api = new APIService(window.location.hostname)
     }
   }
   handleOnChange (editor, data, value) {
