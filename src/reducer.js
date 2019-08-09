@@ -3,7 +3,6 @@ export const initialState = {
   'text': '',
   'saved_text': '',
   'mode': null,
-  'local': true,
   'saved': true,
   'saving': false
 }
@@ -19,11 +18,6 @@ const action_map = {
     return Object.assign({}, state, {
       mode: action.mode,
       saved: false
-    })
-  },
-  CHANGE_LOCAL: (state, action) => {
-    return Object.assign({}, state, {
-      local: action.local
     })
   },
   SAVE: (state, action) => {

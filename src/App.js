@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import * as actions from './actions'
 
 import Codemirror from 'react-codemirror'
 import Header from './components/header'
 
 import ModesService from './modes'
 import APIService from './api'
+import * as actions from './actions'
 
-require('./style.css')
-require('./codemirror.css')
-require('./base16-dark.css')
+import './App.css'
+import './codemirror.css'
+import './base16-dark.css'
 
 // Welcome snippet, added and saved if no paste loaded
-const INTRODUCTION = `## Welcome to IPFSBin!
+const INTRODUCTION = `## Welcome to FluenceBin!
 
 ** Basic usage**
 
@@ -31,10 +31,7 @@ const INTRODUCTION = `## Welcome to IPFSBin!
 6. Profit!!
 
 If you have any questions, open a issue here:
-https://github.com/VictorBjelkholm/ipfsbin/issues/new
-
-or feel free to contact the creator directly on Twitter here:
-https://twitter.com/VictorBjelkholm`
+https://github.com/bakaoh/fluencebin/issues/new`
 
 var modes = new ModesService()
 
@@ -113,10 +110,6 @@ class App extends Component {
   handleOnChangeMode (mode) {
     this.props.dispatch(actions.ChangeMode(mode))
   }
-  handleOnChangeLocal (is_local) {
-    window.localStorage.setItem('local', is_local)
-    this.props.dispatch(actions.ChangeLocal(is_local))
-  }
   render () {
     // TODO Extract editor component
     let found_mode = modes.find(this.props.mode)
@@ -134,8 +127,6 @@ class App extends Component {
       <Header
         mode={this.props.mode}
         onChangeMode={this.handleOnChangeMode.bind(this)}
-        local={this.props.local}
-        onChangeLocal={this.handleOnChangeLocal.bind(this)}
         saving={this.props.saving}
         saved={this.props.saved}
         onSave={this.handleOnSave.bind(this)}
@@ -154,7 +145,6 @@ App.propTypes = {
   mode: PropTypes.string.isRequired,
   hash: PropTypes.string,
   text: PropTypes.string.isRequired,
-  local: PropTypes.bool.isRequired,
   saving: PropTypes.bool.isRequired,
   saved: PropTypes.bool.isRequired
 }

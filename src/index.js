@@ -1,16 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
+
+import App from './App'
 import reducer, { initialState } from './reducer'
 
-let local = false
-if (window.localStorage.getItem('local') !== null) {
-  local = JSON.parse(window.localStorage.getItem('local'))
-}
-
-const store = createStore(reducer, Object.assign(initialState, {local}))
+const store = createStore(reducer, initialState)
 
 ReactDOM.render(<Provider store={store}>
   <App/>
