@@ -1,0 +1,15 @@
+body, html {
+  background-color: #151515;
+  padding: 0px;
+  margin: 0px;
+}
+
+.CodeMirror {
+  position: absolute;
+  top: 30px;
+  height: calc(100vh - 30px) !important;
+}
+
+.clear {
+  clear: both;
+}
