@@ -2,7 +2,7 @@ export const initialState = {
   'hash': null,
   'text': '',
   'saved_text': '',
-  'mode': null,
+  'mode': 'Plain Text',
   'saved': true,
   'saving': false
 }

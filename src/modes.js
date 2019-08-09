@@ -81,7 +81,7 @@ const modes = [
   {name: 'YAML', mime: 'text/x-yaml', mode: 'yaml', ext: ['yaml', 'yml'], alias: ['yml']}
 ]
 
-modes.map((mode) => {
+modes.forEach((mode) => {
   const name = mode.mode
   if (name !== 'null') {
     require('codemirror/mode/' + name + '/' + name + '.js')
@@ -91,7 +91,7 @@ modes.map((mode) => {
 class Modes {
   find (name) {
     for(let i = 0; i < modes.length; i++){
-      if (modes[i].name == name) {
+      if (modes[i].name === name) {
         return modes[i];
       }
     }

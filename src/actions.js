@@ -12,13 +12,6 @@ export function ChangeMode (mode) {
   }
 }
 
-export function ChangeLocal (local) {
-  return {
-    type: 'CHANGE_LOCAL',
-    local
-  }
-}
-
 export function Save () {
   return {
     type: 'SAVE'

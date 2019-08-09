@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Codemirror from 'react-codemirror'
+import {UnControlled as CodeMirror} from 'react-codemirror2'
 import Header from './components/header'
 
 import ModesService from './modes'
@@ -10,8 +10,8 @@ import APIService from './api'
 import * as actions from './actions'
 
 import './App.css'
-import './codemirror.css'
-import './base16-dark.css'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/base16-dark.css'
 
 // Welcome snippet, added and saved if no paste loaded
 const INTRODUCTION = `## Welcome to FluenceBin!
@@ -54,20 +54,20 @@ class App extends Component {
       return window.location.hash.substr(1, window.location.hash.length)
     }
 
-    if (window.location.hash.indexOf('Qm') !== -1) {
-      loadPaste(hashFromURL())
-      this.refs.editor.codeMirror.focus()
-    } else {
-      this.handleOnChange(INTRODUCTION)
-      this.handleOnChangeMode('Markdown')
-      setTimeout(() => {
-        this.handleOnSave()
-      }, 500)
+    const initLoad = () => {
+      if (window.location.hash.indexOf('Qm') !== -1) {
+        loadPaste(hashFromURL())
+        this.refs.editor.codeMirror.focus()
+      } else {
+        this.handleOnChange(null, null, INTRODUCTION)
+        this.handleOnChangeMode('Markdown')
+      }
     }
+    initLoad()
 
     window.onhashchange = () => {
       if (hashFromURL() !== this.props.hash) {
-        loadPaste(hashFromURL())
+        initLoad()
       }
     }
   }
@@ -78,9 +78,9 @@ class App extends Component {
       this.api = new APIService(window.location.hostname)
     }
   }
-  handleOnChange (text) {
-    if (text !== this.props.text) {
-      this.props.dispatch(actions.ChangeText(text))
+  handleOnChange (editor, data, value) {
+    if (value !== undefined && value !== this.props.text) {
+      this.props.dispatch(actions.ChangeText(value))
     }
   }
   handleOnSave () {
@@ -132,7 +132,8 @@ class App extends Component {
         onSave={this.handleOnSave.bind(this)}
         onNew={this.handleOnNew.bind(this)}
       />
-      <Codemirror
+      <CodeMirror
+        autoCursor={false}
         value={this.props.text}
         onChange={this.handleOnChange.bind(this)}
         options={options}
