@@ -18,16 +18,14 @@ const getResultString = (result) => {
 }
 
 class API {
-  constructor() {
-    // let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
-    // let ethUrl = "http://rinkeby.fluence.one:8545/"
-    // let appId = "344";
-    // fluence.connect(contractAddress, appId, ethUrl).then((s) => {
-    //   this.session = s;
-    // });
-    this.session = fluence.directConnect("localhost", 30000, 1);
+  connect() {
+    let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
+    let ethUrl = "http://rinkeby.fluence.one:8545/"
+    let appId = "355";
+    return fluence.connect(contractAddress, appId, ethUrl).then((s) => {
+      this.session = s;
+    });
   }
-
   post(data) {
     return getResultString(this.session.request("POST: " + data));
   }

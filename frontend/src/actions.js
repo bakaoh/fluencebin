@@ -12,6 +12,13 @@ export function ChangeMode (mode) {
   }
 }
 
+export function ChangeSpinner (show) {
+  return {
+    type: 'CHANGE_SPINNER',
+    show
+  }
+}
+
 export function Save () {
   return {
     type: 'SAVE'

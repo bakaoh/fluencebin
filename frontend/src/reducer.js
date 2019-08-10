@@ -4,7 +4,8 @@ export const initialState = {
   'saved_text': '',
   'mode': 'Plain Text',
   'saved': true,
-  'saving': false
+  'saving': false,
+  'loading': false,
 }
 
 const action_map = {
@@ -18,6 +19,11 @@ const action_map = {
     return Object.assign({}, state, {
       mode: action.mode,
       saved: false
+    })
+  },
+  CHANGE_SPINNER: (state, action) => {
+    return Object.assign({}, state, {
+      loading: action.show,
     })
   },
   SAVE: (state, action) => {
