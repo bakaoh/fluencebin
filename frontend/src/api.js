@@ -6,7 +6,7 @@ const parseJSONorNonJSON = (to_parse) => {
     to_return = JSON.parse(to_parse)
   } catch (e) {
     to_return = {
-      mode: null,
+      mode: 'Plain Text',
       text: to_parse
     }
   }
@@ -18,7 +18,7 @@ const getResultString = (result) => {
 }
 
 class API {
-  constructor () {
+  constructor() {
     // let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
     // let ethUrl = "http://rinkeby.fluence.one:8545/"
     // let appId = "344";
@@ -28,23 +28,13 @@ class API {
     this.session = fluence.directConnect("localhost", 30000, 1);
   }
 
-  post (data) {
-    let result = this.session.request("POST: " + data);
-    return new Promise((resolve) => {
-      getResultString(result).then(function (str) {
-        resolve(str);
-      });
-    })
+  post(data) {
+    return this.session.request("POST: " + data).getResultString();
   }
-  put (hash, data) {
-    let result = this.session.request("PUT: " + hash + ":" + data);
-    return new Promise((resolve) => {
-      getResultString(result).then(function (str) {
-        resolve(str);
-      });
-    })
+  put(hash, data) {
+    return this.session.request("PUT: " + hash + ":" + data).getResultString();
   }
-  get (hash) {
+  get(hash) {
     let result = this.session.request("GET: " + hash);
     return new Promise((resolve, reject) => {
       getResultString(result).then(function (str) {

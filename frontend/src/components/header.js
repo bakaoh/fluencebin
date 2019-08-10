@@ -15,7 +15,9 @@ export default class Header extends Component {
     return <div className='header'>
       <div className='header-item'>
         <div className='header-title'>
-          FluenceBin
+          <a rel="noopener noreferrer" href='https://github.com/bakaoh/fluencebin' target='_blank'>
+            Fluence<span className='title-bin'>Bin</span>
+          </a>
         </div>
       </div>
       <div className='header-item'>
@@ -29,9 +31,6 @@ export default class Header extends Component {
           evt.preventDefault()
           this.props.onSave()
         }}>{saveText}</button>
-      </div>
-      <div className='header-item header-item-right'>
-        <a rel="noopener noreferrer" href='https://github.com/bakaoh/fluencebin' target='_blank'>Source Code</a>
       </div>
       <div className='clear'></div>
     </div>
