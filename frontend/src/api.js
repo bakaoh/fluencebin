@@ -29,10 +29,10 @@ class API {
   }
 
   post(data) {
-    return this.session.request("POST: " + data).getResultString();
+    return getResultString(this.session.request("POST: " + data));
   }
   put(hash, data) {
-    return this.session.request("PUT: " + hash + ":" + data).getResultString();
+    return getResultString(this.session.request("PUT: " + hash + ":" + data));
   }
   get(hash) {
     let result = this.session.request("GET: " + hash);

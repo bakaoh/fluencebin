@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import SelectLanguage from './select_language'
+import SelectLanguage from './selectLanguage'
 import './header.css'
 
 export default class Header extends Component {
