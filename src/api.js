@@ -28,7 +28,7 @@ class API {
     this.session = fluence.directConnect("localhost", 30000, 1);
   }
 
-  add (data) {
+  post (data) {
     let result = this.session.request("POST: " + data);
     return new Promise((resolve) => {
       getResultString(result).then(function (str) {
@@ -36,11 +36,23 @@ class API {
       });
     })
   }
-  cat (hash) {
-    let result = this.session.request("GET: " + hash);
+  put (hash, data) {
+    let result = this.session.request("PUT: " + hash + ":" + data);
     return new Promise((resolve) => {
       getResultString(result).then(function (str) {
-        resolve(parseJSONorNonJSON(str));
+        resolve(str);
+      });
+    })
+  }
+  get (hash) {
+    let result = this.session.request("GET: " + hash);
+    return new Promise((resolve, reject) => {
+      getResultString(result).then(function (str) {
+        if (str) {
+          resolve(parseJSONorNonJSON(str));
+        } else {
+          reject("Hash not found")
+        }
       });
     })
   }

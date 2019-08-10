@@ -35,25 +35,28 @@ https://github.com/bakaoh/fluencebin/issues/new`
 
 var modes = new ModesService()
 
+const hashFromURL = () => {
+  return window.location.hash.substr(1, window.location.hash.length)
+}
+
 class App extends Component {
   componentDidMount () {
     this.api = new APIService()
     const loadPaste = (hash) => {
       this.props.dispatch(actions.Reset())
-      this.api.cat(hash).then((obj) => {
+      this.api.get(hash).then((obj) => {
         this.props.dispatch(actions.ChangeText(obj.text))
         this.props.dispatch(actions.ChangeMode(obj.mode))
         this.props.dispatch(actions.Saved(hash))
+      }).catch(() => {
+        this.props.dispatch(actions.Reset())
+        window.history.replaceState({}, document.title, '/')
       })
     }
-    const hashFromURL = () => {
-      return window.location.hash.substr(1, window.location.hash.length)
-    }
-
+    
     const initLoad = () => {
-      if (window.location.hash.indexOf('Qm') !== -1) {
+      if (window.location.hash) {
         loadPaste(hashFromURL())
-        this.refs.editor.codeMirror.focus()
       } else {
         this.handleOnChange(null, null, INTRODUCTION)
         this.handleOnChangeMode('Markdown')
@@ -85,10 +88,16 @@ class App extends Component {
           mode
         })
       }
-      this.api.add(to_save).then((hash) => {
-        window.location.hash = hash
-        this.props.dispatch(actions.Saved(hash))
-      })
+      if (window.location.hash) {
+        this.api.put(hashFromURL(), to_save).then((hash) => {
+          this.props.dispatch(actions.Saved(hash))
+        })
+      } else {
+        this.api.post(to_save).then((hash) => {
+          window.location.hash = hash
+          this.props.dispatch(actions.Saved(hash))
+        })
+      }
     }
   }
   handleOnNew (evt) {
@@ -100,7 +109,6 @@ class App extends Component {
     this.props.dispatch(actions.ChangeMode(mode))
   }
   render () {
-    // TODO Extract editor component
     let found_mode = modes.find(this.props.mode)
     if (found_mode !== undefined) {
       found_mode = found_mode.mode
