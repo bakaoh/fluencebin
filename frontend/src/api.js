@@ -13,33 +13,37 @@ const parseJSONorNonJSON = (to_parse) => {
   return to_return
 }
 
-const getResultString = (result) => {
-  return result.result().then((r) => r.asString())
+const getResult = (result) => {
+  return result.result().then((r) => JSON.parse(r.asString()))
 }
 
 class API {
   connect() {
-    let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
-    let ethUrl = "http://rinkeby.fluence.one:8545/"
-    let appId = "355";
-    return fluence.connect(contractAddress, appId, ethUrl).then((s) => {
-      this.session = s;
-    });
+    this.session = fluence.directConnect("localhost", 30000, 1);
+    return new Promise((resolve) => {
+      resolve(this.session)
+    })
+    // let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
+    // let ethUrl = "http://rinkeby.fluence.one:8545/"
+    // let appId = "355";
+    // return fluence.connect(contractAddress, appId, ethUrl).then((s) => {
+    //   this.session = s;
+    // });
   }
   post(data) {
-    return getResultString(this.session.request("POST: " + data));
+    return getResult(this.session.request("POST: " + data));
   }
   put(hash, data) {
-    return getResultString(this.session.request("PUT: " + hash + ":" + data));
+    return getResult(this.session.request("PUT: " + hash + ":" + data));
   }
   get(hash) {
     let result = this.session.request("GET: " + hash);
     return new Promise((resolve, reject) => {
-      getResultString(result).then(function (str) {
-        if (str) {
-          resolve(parseJSONorNonJSON(str));
+      getResult(result).then(function (obj) {
+        if (obj.error) {
+          reject(obj.error)
         } else {
-          reject("Hash not found")
+          resolve(parseJSONorNonJSON(obj.content));
         }
       });
     })

@@ -97,13 +97,13 @@ class App extends Component {
         })
       }
       if (window.location.hash) {
-        this.api.put(hashFromURL(), to_save).then((hash) => {
-          this.props.dispatch(actions.Saved(hash))
+        this.api.put(hashFromURL(), to_save).then((res) => {
+          this.props.dispatch(actions.Saved(res.hash))
         })
       } else {
-        this.api.post(to_save).then((hash) => {
-          window.location.hash = hash
-          this.props.dispatch(actions.Saved(hash))
+        this.api.post(to_save).then((res) => {
+          window.location.hash = res.hash
+          this.props.dispatch(actions.Saved(res.hash))
         })
       }
     }
