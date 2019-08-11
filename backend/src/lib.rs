@@ -17,6 +17,14 @@ fn init() {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(tag = "action")]
+pub enum Request {
+    Post { content: String },
+    Put { hash: String, content: String },
+    Get { hash: String },
+}
+
+#[derive(Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Response {
     Post { hash: String },
@@ -27,28 +35,24 @@ pub enum Response {
 
 #[invocation_handler(init_fn = init)]
 fn main(arg: String) -> String {
-    let mut req = arg.clone();
-    let res = if req.starts_with("POST: ") {
-        let hash = COUNTER.fetch_add(1, Ordering::SeqCst).to_string();
-        let content = req.split_off(6);
-        CONTENT.insert(hash.clone(), content);
-        Response::Post { hash }
-    } else if req.starts_with("PUT: ") {
-        let mut data = req.split_off(5);
-        let params: Vec<&str> = data.split(":").collect();
-        let hash = String::from(params[0]);
-        let content = data.split_off(hash.len() + 1);
-        CONTENT.insert(hash.clone(), content);
-        Response::Put { hash }
-    } else if req.starts_with("GET: ") {
-        let hash = req.split_off(5);
-        let content = CONTENT.get(&hash);
-        match content {
-            Some(ref v) => Response::Get { content: v.to_string() },
-            None => Response::Error { error: String::from("Not found") },
+    let req: Request = serde_json::from_str(arg.as_str()).unwrap();
+    let res = match req {
+        Request::Post { content } => {
+            let hash = COUNTER.fetch_add(1, Ordering::SeqCst).to_string();
+            CONTENT.insert(hash.clone(), content);
+            Response::Post { hash }
         }
-    } else {
-        Response::Error { error: String::from("Invalid action") }
+        Request::Put { hash, content } => {
+            CONTENT.insert(hash.clone(), content);
+            Response::Put { hash }
+        }
+        Request::Get { hash } => {
+            let content = CONTENT.get(&hash);
+            match content {
+                Some(ref v) => Response::Get { content: v.to_string() },
+                None => Response::Error { error: String::from("Not found") },
+            }
+        }
     };
     return serde_json::to_string(&res).unwrap()
 }

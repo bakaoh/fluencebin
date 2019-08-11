@@ -13,10 +13,6 @@ const parseJSONorNonJSON = (to_parse) => {
   return to_return
 }
 
-const getResult = (result) => {
-  return result.result().then((r) => JSON.parse(r.asString()))
-}
-
 class API {
   connect() {
     this.session = fluence.directConnect("localhost", 30000, 1);
@@ -30,23 +26,39 @@ class API {
     //   this.session = s;
     // });
   }
+  request(obj) {
+    return new Promise((resolve, reject) => {
+      this.session
+        .request(JSON.stringify(obj))
+        .result()
+        .then((r) => JSON.parse(r.asString()))
+        .then((obj) => {
+          if (obj.error) {
+            reject(obj.error)
+          } else {
+            resolve(obj)
+          }
+        })
+    })
+  }
   post(data) {
-    return getResult(this.session.request("POST: " + data));
+    return this.request({
+      action: "Post",
+      content: data,
+    }).hash;
   }
   put(hash, data) {
-    return getResult(this.session.request("PUT: " + hash + ":" + data));
+    return this.request({
+      action: "Put",
+      hash: hash,
+      content: data,
+    }).hash;
   }
   get(hash) {
-    let result = this.session.request("GET: " + hash);
-    return new Promise((resolve, reject) => {
-      getResult(result).then(function (obj) {
-        if (obj.error) {
-          reject(obj.error)
-        } else {
-          resolve(parseJSONorNonJSON(obj.content));
-        }
-      });
-    })
+    return this.request({
+      action: "Get",
+      hash: hash,
+    }).then((obj) => parseJSONorNonJSON(obj.content))
   }
 }
 
