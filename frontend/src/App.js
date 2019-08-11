@@ -54,8 +54,8 @@ class App extends Component {
           this.props.dispatch(actions.ChangeMode(obj.mode))
           this.props.dispatch(actions.Saved(hash))
         }).catch(() => {
+          window.history.replaceState({}, document.title, window.location.pathname)
           this.props.dispatch(actions.Reset())
-          window.history.replaceState({}, document.title, '/')
         }).finally(() => {
           this.props.dispatch(actions.ChangeSpinner(false))
         })
@@ -110,8 +110,8 @@ class App extends Component {
   }
   handleOnNew (evt) {
     evt.preventDefault()
-    this.props.dispatch(actions.Reset())
     window.history.replaceState({}, document.title, window.location.pathname)
+    this.props.dispatch(actions.Reset())
   }
   handleOnChangeMode (mode) {
     this.props.dispatch(actions.ChangeMode(mode))
