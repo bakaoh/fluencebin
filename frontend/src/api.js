@@ -15,16 +15,16 @@ const parseJSONorNonJSON = (to_parse) => {
 
 class API {
   connect() {
-    this.session = fluence.directConnect("localhost", 30000, 1);
-    return new Promise((resolve) => {
-      resolve(this.session)
-    })
-    // let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
-    // let ethUrl = "http://rinkeby.fluence.one:8545/"
-    // let appId = "355";
-    // return fluence.connect(contractAddress, appId, ethUrl).then((s) => {
-    //   this.session = s;
-    // });
+    // this.session = fluence.directConnect("localhost", 30000, 1);
+    // return new Promise((resolve) => {
+    //   resolve(this.session)
+    // })
+    let contractAddress = "0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01";
+    let ethUrl = "http://rinkeby.fluence.one:8545/"
+    let appId = "366";
+    return fluence.connect(contractAddress, appId, ethUrl).then((s) => {
+      this.session = s;
+    });
   }
   request(obj) {
     return new Promise((resolve, reject) => {
@@ -45,14 +45,14 @@ class API {
     return this.request({
       action: "Post",
       content: data,
-    }).hash;
+    }).then((obj) => obj.hash)
   }
   put(hash, data) {
     return this.request({
       action: "Put",
       hash: hash,
       content: data,
-    }).hash;
+    }).then((obj) => obj.hash)
   }
   get(hash) {
     return this.request({

@@ -6,6 +6,7 @@ The frontend of this project is based on [ipfsbin](https://github.com/victorb/ip
 
 ## TODO
 
+- [ ] User profile
 - [ ] Access control
 - [ ] Line comment
 - [ ] Repl

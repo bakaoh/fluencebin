@@ -45,9 +45,10 @@ class App extends Component {
     this.props.dispatch(actions.ChangeSpinner(true))
     this.api = new APIService()
     this.api.connect().then(() => {
+      this.props.dispatch(actions.ChangeSpinner(false))
       const loadPaste = (hash) => {
-        this.props.dispatch(actions.ChangeSpinner(true))
         this.props.dispatch(actions.Reset())
+        this.props.dispatch(actions.ChangeSpinner(true))
         this.api.get(hash).then((obj) => {
           this.props.dispatch(actions.ChangeText(obj.text))
           this.props.dispatch(actions.ChangeMode(obj.mode))
@@ -75,7 +76,6 @@ class App extends Component {
           initLoad()
         }
       }
-      this.props.dispatch(actions.ChangeSpinner(false))
     })
   }
   handleOnChange (editor, data, value) {
